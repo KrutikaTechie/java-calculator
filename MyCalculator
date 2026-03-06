@@ -1,0 +1,69 @@
+import java.util.Scanner;
+
+public class Main {
+    // ANSI Color codes to make it look "Nice" in the VS Code Terminal
+    public static final String RESET = "\u001B[0m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String RED = "\u001B[31m";
+    public static final String YELLOW = "\u001B[33m";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        // Step 1: Decorative Header (Looks great on GitHub)
+        System.out.println(CYAN + "________________________________________________" + RESET);
+        System.out.println(CYAN + "|                                              |" + RESET);
+        System.out.println(CYAN + "|        ✨ MODERN JAVA CALCULATOR ✨          |" + RESET);
+        System.out.println(CYAN + "|______________________________________________|" + RESET);
+
+        while (running) {
+            try {
+                System.out.print(YELLOW + "\n[Input] " + RESET + "Enter first number: ");
+                double num1 = scanner.nextDouble();
+
+                System.out.print(YELLOW + "[Input] " + RESET + "Choose operator (+, -, *, /): ");
+                char op = scanner.next().charAt(0);
+
+                System.out.print(YELLOW + "[Input] " + RESET + "Enter second number: ");
+                double num2 = scanner.nextDouble();
+
+                double result = calculate(num1, num2, op);
+
+                // Step 2: Designed Result Box
+                System.out.println(GREEN + "\n  ================================" + RESET);
+                System.out.printf(GREEN + "     RESULT: %.2f %c %.2f = %.2f\n" + RESET, num1, op, num2, result);
+                System.out.println(GREEN + "  ================================" + RESET);
+
+            } catch (ArithmeticException e) {
+                System.out.println(RED + "  [Error] " + e.getMessage() + RESET);
+            } catch (Exception e) {
+                System.out.println(RED + "  [Error] Invalid input! Please use numbers." + RESET);
+                scanner.nextLine(); // Clear buffer
+            }
+
+            System.out.print("\nPress 'y' to continue or any other key to exit: ");
+            String choice = scanner.next().toLowerCase();
+            if (!choice.equals("y")) {
+                running = false;
+            }
+        }
+
+        System.out.println(CYAN + "\nGoodbye! Thanks for checking my GitHub project." + RESET);
+        scanner.close();
+    }
+
+    public static double calculate(double a, double b, char op) {
+        return switch (op) {
+            case '+' -> a + b;
+            case '-' -> a - b;
+            case '*' -> a * b;
+            case '/' -> {
+                if (b == 0) throw new ArithmeticException("Cannot divide by zero!");
+                yield a / b;
+            }
+            default -> throw new IllegalArgumentException("Unknown operator: " + op);
+        };
+    }
+}
